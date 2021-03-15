@@ -43,23 +43,25 @@ public class ScanSettingsClientImpl implements ScanSettingsClient {
 
     private final RestTemplate restTemplate;
     private final CxProperties cxProperties;
-    private final CxAuthClient authClient;
+    private final CxAuthService authClient;
 
     public ScanSettingsClientImpl(@Qualifier("cxRestTemplate") RestTemplate restTemplate,
                                   CxProperties cxProperties,
-                                  CxAuthClient authClient) {
+                                  CxAuthService authClient) {
         this.restTemplate = restTemplate;
         this.cxProperties = cxProperties;
         this.authClient = authClient;
     }
 
     @Override
-    public int createScanSettings(int projectId, int presetId, int engineConfigId) {
+    public int createScanSettings(int projectId, int presetId, int engineConfigId, int postActionId) {
         CxScanSettings scanSettings = CxScanSettings.builder()
                 .projectId(projectId)
                 .engineConfigurationId(engineConfigId)
                 .presetId(presetId)
                 .build();
+        if(cxProperties.getEnablePostActionMonitor() && postActionId != 0)
+            scanSettings.setPostScanActionId(postActionId);
         HttpEntity<CxScanSettings> requestEntity = new HttpEntity<>(scanSettings, authClient.createAuthHeaders());
 
         log.info("Creating ScanSettings for project Id {}", projectId);

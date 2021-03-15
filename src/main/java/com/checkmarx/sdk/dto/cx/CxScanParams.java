@@ -1,5 +1,7 @@
 package com.checkmarx.sdk.dto.cx;
 
+import lombok.Getter;
+
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +26,9 @@ public class CxScanParams {
     private Map<String, String> customFields;
     //TODO add add post actions
     private String postAction;
+
+    @Getter
+    private String clientSecret;
 
     public String getTeamName() {
         return teamName;
@@ -244,6 +249,12 @@ public class CxScanParams {
         return this;
     }
 
+    public CxScanParams withClientSecret(String value) {
+        this.clientSecret = value;
+        return this;
+    }
+
+
     public CxScanParams teamId(final String teamId) {
         this.teamId = teamId;
         return this;
@@ -275,6 +286,13 @@ public class CxScanParams {
         }
     }
 
+    public boolean isGitSource(){
+        return getSourceType().equals(Type.GIT);
+    }
+    public boolean isFileSource(){
+        return getSourceType().equals(Type.FILE);
+    }
+    
     @Override
     public String toString() {
         return "CxScanParams{" +

@@ -1,10 +1,10 @@
 package com.checkmarx.sdk.dto;
 
 import com.checkmarx.sdk.dto.ast.ASTResults;
-import com.cx.restclient.ast.dto.sca.report.Finding;
-import com.cx.restclient.ast.dto.sca.report.Package;
+import com.checkmarx.sdk.dto.sca.SCAResults;
+import com.checkmarx.sdk.dto.sca.report.Finding;
+import com.checkmarx.sdk.dto.sca.report.Package;
 import com.checkmarx.sdk.dto.cx.CxScanSummary;
-import com.checkmarx.sdk.dto.ast.SCAResults;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -182,12 +182,13 @@ public class ScanResults{
     }
 
     public boolean isAstResults(){
-        return Optional.ofNullable(getAstResults()).isPresent() &&  Optional.ofNullable(getAstResults().getResults()).isPresent();
+        return getAstResults() != null ;
     }
 
-    public boolean isSastRestuls(){
+    public boolean isSastResults(){
         return Optional.ofNullable(getScanSummary()).isPresent();
     }
+    
     @Override
     public String toString() {
         return "ScanResults(osa=" + this.getOsa()  + ", link=" + this.getLink() + ", files=" + this.getFiles() + ", loc=" + this.getLoc() + ", scanType=" + this.getScanType() + ", xIssues=" + this.getXIssues() + ")";
@@ -220,10 +221,11 @@ public class ScanResults{
         private List<ScaDetails> scaDetails;
         private Map<Integer, IssueDetails>  details;
         private Map<String, Object> additionalDetails;
+        private String queryId;
 
-        XIssue(String vulnerability,String vulnerabilityStatus, String similarityId, String cwe, String cve, String description, String language,
+        XIssue(String vulnerability, String vulnerabilityStatus, String similarityId, String cwe, String cve, String description, String language,
                String severity, String link, String filename, String gitUrl, List<OsaDetails> osaDetails, List<ScaDetails> scaDetails, Map<Integer, IssueDetails> details,
-               Map<String, Object> additionalDetails) {
+               Map<String, Object> additionalDetails, String queryId) {
             this.vulnerability = vulnerability;
             this.vulnerabilityStatus = vulnerabilityStatus;
             this.similarityId = similarityId;
@@ -239,6 +241,7 @@ public class ScanResults{
             this.scaDetails = scaDetails;
             this.details = details;
             this.additionalDetails = additionalDetails;
+            this.queryId = queryId;
         }
 
         public static XIssueBuilder builder() {
@@ -276,6 +279,9 @@ public class ScanResults{
             return vulnerabilityStatus;
         }
 
+        public String gerQueryId() {
+            return queryId;
+        }
         public void setVulnerabilityStatus(String vulnerabilityStatus) {
             this.vulnerabilityStatus = vulnerabilityStatus;
         }
@@ -418,6 +424,7 @@ public class ScanResults{
             private String severity;
             private String link;
             private String file;
+            private String queryId;
             private List<OsaDetails> osaDetails;
             private List<ScaDetails> scaDetails;
 
@@ -476,6 +483,11 @@ public class ScanResults{
                 return this;
             }
 
+            public XIssue.XIssueBuilder queryId(String queryId) {
+                this.queryId = queryId;
+                return this;
+            }
+
             public XIssue.XIssueBuilder osaDetails(List<OsaDetails> osaDetails) {
                 this.osaDetails = osaDetails;
                 return this;
@@ -497,7 +509,7 @@ public class ScanResults{
             }
 
             public XIssue build() {
-                return new XIssue(vulnerability,  vulnerabilityStatus, similarityId, cwe, cve, description, language, severity, link, file, "", osaDetails, scaDetails, details, additionalDetails);
+                return new XIssue(vulnerability,  vulnerabilityStatus, similarityId, cwe, cve, description, language, severity, link, file, "", osaDetails, scaDetails, details, additionalDetails, queryId);
             }
 
             @Override
