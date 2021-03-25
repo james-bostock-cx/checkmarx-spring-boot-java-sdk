@@ -256,7 +256,8 @@ public class ScanResults{
             XIssue issue = (XIssue) o;
 
             if (!vulnerability.equals(issue.vulnerability)) return false;
-            return filename.equals(issue.filename);
+            if (!filename.equals(issue.filename)) return false;
+            return severity.equals(issue.severity);
         }
 
         @Override
@@ -265,6 +266,7 @@ public class ScanResults{
             if(vulnerability != null) {
                 result = vulnerability.hashCode();
                 result = HASH_CONST * result + filename.hashCode();
+                result = HASH_CONST * result + severity.hashCode();
             }else{
                 if(scaDetails != null){
                     result = scaDetails.get(0).finding.hashCode();
