@@ -851,7 +851,6 @@ public class CxService implements CxClient {
                 }
             }
 
-            log.debug("similarityIdsToExclude: {}", similarityIdsToExclude);
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern(cxProperties.getDetectionDateFormat());
             for (QueryType result : cxResults.getQuery()) {
                 ScanResults.XIssue.XIssueBuilder xIssueBuilder = ScanResults.XIssue.builder();
